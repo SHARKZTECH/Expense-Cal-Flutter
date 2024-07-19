@@ -1,3 +1,4 @@
+import 'package:expense_calculator/create_expense_page.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -9,12 +10,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  void createExpensePage() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const CreateExpensePage(),
+        ));
   }
 
   @override
@@ -24,14 +25,14 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Column(
+      body: const Column(
         children: <Widget>[
           Text(
-            "Total expense: 1000.0 $_counter",
+            "Total expense: 1000.0",
             style: TextStyle(fontWeight: FontWeight.w900),
             textAlign: TextAlign.start,
           ),
-          const Card(
+          Card(
             margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
             child: Padding(
               padding: EdgeInsets.all(8.0),
@@ -50,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          const Card(
+          Card(
             margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
             child: Padding(
               padding: EdgeInsets.all(8.0),
@@ -72,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: createExpensePage,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.

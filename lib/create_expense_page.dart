@@ -34,7 +34,7 @@ class CreateExpensePage extends StatelessWidget {
             ),
             FilledButton(
               onPressed: () {},
-              child: const Text("Update"),
+              child: const Text("Submit"),
             )
           ],
         )),
