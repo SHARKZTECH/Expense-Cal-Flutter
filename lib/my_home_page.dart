@@ -38,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(Icons.money_off_rounded),
+                  Icon(Icons.monetization_on),
                   Column(
                     children: [
                       Text("Food: 1000.0"),
@@ -57,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(Icons.money_off_rounded),
+                  Icon(Icons.monetization_on),
                   Column(
                     children: [
                       Text("Food: 1000.0"),
