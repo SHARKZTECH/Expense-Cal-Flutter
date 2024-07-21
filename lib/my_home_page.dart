@@ -1,4 +1,5 @@
 import 'package:expense_calculator/create_expense_page.dart';
+import 'package:expense_calculator/expense.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -18,6 +19,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 
+  final items = Expense.getExpenses();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,20 +35,13 @@ class _MyHomePageState extends State<MyHomePage> {
             style: TextStyle(fontWeight: FontWeight.w900),
             textAlign: TextAlign.start,
           ),
-          const ExpenseBox(
-            amount: 100.0,
-            date: "2019-04-01",
-            category: "Food",
-          ),
-          ListView(
-            shrinkWrap: true,
-            children: const [
-              ExpenseBox(
-                amount: 100.0,
-                date: "2019-04-01",
-                category: "Food",
-              ),
-            ],
+          Expanded(
+            child: ListView.builder(
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                return ExpenseBox(item: items[index]);
+              },
+            ),
           )
         ],
       ),
@@ -61,14 +57,10 @@ class _MyHomePageState extends State<MyHomePage> {
 class ExpenseBox extends StatelessWidget {
   const ExpenseBox({
     super.key,
-    required this.amount,
-    required this.date,
-    required this.category,
+    required this.item,
   });
 
-  final double amount;
-  final String date;
-  final String category;
+  final Expense item;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +73,10 @@ class ExpenseBox extends StatelessWidget {
           children: [
             const Icon(Icons.monetization_on),
             Column(
-              children: [Text("$category: $amount"), Text("spent on $date")],
+              children: [
+                Text("${item.category}: ${item.amount.toString()}"),
+                Text("spent on ${item.formattedDate}")
+              ],
             ),
             const Icon(Icons.arrow_forward),
           ],

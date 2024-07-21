@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
+import 'package:scoped_model/scoped_model.dart';
 
-class Expense {
+class Expense extends Model {
   final int id;
   final double amount;
   final DateTime date;
@@ -13,7 +14,7 @@ class Expense {
       required this.category});
 
   String get formattedDate {
-    var formatter = new DateFormat("yyyy-MM-dd");
+    var formatter = DateFormat("yyyy-MM-dd");
     return formatter.format(date);
   }
 
@@ -29,4 +30,19 @@ class Expense {
 
   Map<String, dynamic> toMap() =>
       {"id": id, "amount": amount, "date": date, "category": category};
+
+  static List<Expense> getExpenses() {
+    List<Expense> items = [];
+
+    items.add(
+        Expense(id: 1, amount: 10.0, date: DateTime.now(), category: "Food 1"));
+    items.add(
+        Expense(id: 2, amount: 10.0, date: DateTime.now(), category: "Food 2"));
+    items.add(
+        Expense(id: 3, amount: 10.0, date: DateTime.now(), category: "Food 3"));
+    items.add(
+        Expense(id: 4, amount: 10.0, date: DateTime.now(), category: "Food 4"));
+
+    return items;
+  }
 }
