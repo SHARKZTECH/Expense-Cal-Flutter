@@ -110,8 +110,12 @@ class ExpenseBox extends StatelessWidget {
         ),
       ),
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const ExpensePage()));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ExpensePage(
+                      item: item,
+                    )));
       },
     );
   }
