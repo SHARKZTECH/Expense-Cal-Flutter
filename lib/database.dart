@@ -31,7 +31,7 @@ class SQLiteDbProvider {
   }
 
   Future<Database> initDB() async {
-    // await deleteDatabaseFile(); // Clear the existing database first
+    await deleteDatabaseFile(); // Clear the existing database first
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, "ExpenseDB.db");
 
@@ -42,7 +42,7 @@ class SQLiteDbProvider {
       onCreate: (db, version) async {
         await db.execute("""
           CREATE TABLE Expense (
-            id INTEGER PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             amount REAL,
             date TEXT,
             category TEXT
@@ -55,13 +55,11 @@ class SQLiteDbProvider {
 
   Future<void> insertExpenses(Database db) async {
     await db.insert('Expense', {
-      'id': 1,
       'amount': 100.0,
       'date': DateTime.now().toIso8601String(),
       'category': "Food One"
     });
     await db.insert('Expense', {
-      'id': 2,
       'amount': 10.0,
       'date': DateTime.now().toIso8601String(),
       'category': "Food Two"

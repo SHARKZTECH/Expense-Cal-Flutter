@@ -30,7 +30,7 @@ class _CreateExpensePageState extends State<CreateExpensePage> {
       final date = DateTime.parse(_dateController.text);
       final category = _categoryController.text;
 
-      final newExpense = Expense(0, amount, date, category);
+      final newExpense = Expense(amount, date, category);
 
       await SQLiteDbProvider.db.createExpense(newExpense);
 
