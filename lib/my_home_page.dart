@@ -25,51 +25,28 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: const Column(
+      body: Column(
         children: <Widget>[
-          Text(
+          const Text(
             "Total expense: 1000.0",
             style: TextStyle(fontWeight: FontWeight.w900),
             textAlign: TextAlign.start,
           ),
-          Card(
-            margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Icon(Icons.monetization_on),
-                  Column(
-                    children: [
-                      Text("Food: 1000.0"),
-                      Text("spent on 2019-04-01")
-                    ],
-                  ),
-                  Icon(Icons.arrow_forward),
-                ],
-              ),
-            ),
+          const ExpenseBox(
+            amount: 100.0,
+            date: "2019-04-01",
+            category: "Food",
           ),
-          Card(
-            margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Icon(Icons.monetization_on),
-                  Column(
-                    children: [
-                      Text("Food: 1000.0"),
-                      Text("spent on 2019-04-01")
-                    ],
-                  ),
-                  Icon(Icons.arrow_forward),
-                ],
+          ListView(
+            shrinkWrap: true,
+            children: const [
+              ExpenseBox(
+                amount: 100.0,
+                date: "2019-04-01",
+                category: "Food",
               ),
-            ),
-          ),
+            ],
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -77,6 +54,39 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class ExpenseBox extends StatelessWidget {
+  const ExpenseBox({
+    super.key,
+    required this.amount,
+    required this.date,
+    required this.category,
+  });
+
+  final double amount;
+  final String date;
+  final String category;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Icon(Icons.monetization_on),
+            Column(
+              children: [Text("$category: $amount"), Text("spent on $date")],
+            ),
+            const Icon(Icons.arrow_forward),
+          ],
+        ),
+      ),
     );
   }
 }
