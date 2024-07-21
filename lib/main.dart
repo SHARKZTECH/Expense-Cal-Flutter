@@ -1,12 +1,19 @@
+import 'package:expense_calculator/database.dart';
+import 'package:expense_calculator/expense.dart';
 import 'package:flutter/material.dart';
 import 'my_home_page.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding
+      .ensureInitialized(); // Ensure the Flutter bindings are initialized
+  runApp(MyApp(
+    expenses: SQLiteDbProvider.db.getAllExpenses(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final Future<List<Expense>> expenses;
+  const MyApp({super.key, required this.expenses});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +23,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Expense calculator'),
+      home: MyHomePage(
+        title: 'Expense calculator',
+        expenses: expenses,
+      ),
     );
   }
 }

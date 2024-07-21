@@ -4,8 +4,9 @@ import 'package:expense_calculator/expense_page.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key, required this.title, required this.expenses});
   final String title;
+  final Future<List<Expense>> expenses;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -20,7 +21,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 
-  final items = Expense.getExpenses();
+  final items = [];
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +38,15 @@ class _MyHomePageState extends State<MyHomePage> {
             textAlign: TextAlign.start,
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                return ExpenseBox(item: items[index]);
+            child: FutureBuilder<List<Expense>>(
+              future: widget.expenses,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) print(snapshot.error);
+                return snapshot.hasData
+                    ? ExpenseList(items: snapshot.data ?? [])
+                    : const Center(
+                        child: CircularProgressIndicator(),
+                      );
               },
             ),
           )
@@ -51,6 +57,24 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+}
+
+class ExpenseList extends StatelessWidget {
+  const ExpenseList({
+    super.key,
+    required this.items,
+  });
+
+  final List<Expense> items;
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        return ExpenseBox(item: items[index]);
+      },
     );
   }
 }
