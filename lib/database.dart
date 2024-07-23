@@ -66,9 +66,10 @@ class SQLiteDbProvider {
     });
   }
 
-  Future<int> createExpense(Expense expense) async {
+  Future<Expense> createExpense(Expense expense) async {
     final db = await database;
-    return await db.insert('Expense', expense.toMap());
+    int id = await db.insert('Expense', expense.toMap());
+    return Expense(expense.amount, expense.date, expense.category, id: id);
   }
 
   Future<Expense?> getExpenseById(int id) async {
@@ -97,12 +98,19 @@ class SQLiteDbProvider {
     );
   }
 
-  Future<int> deleteExpense(int id) async {
+  Future<int> deleteExpense(int? id) async {
     final db = await database;
     return await db.delete(
       'Expense',
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  Future<double> getTotalExpense() async {
+    final db = await database;
+    List<Map> list =
+        await db.rawQuery("Select SUM(amount) as amount from expense");
+    return list.isNotEmpty ? list[0]["amount"] : Null;
   }
 }

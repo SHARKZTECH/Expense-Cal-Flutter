@@ -1,10 +1,13 @@
 import 'package:expense_calculator/database.dart';
 import 'package:expense_calculator/expense.dart';
+import 'package:expense_calculator/expenselistmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class CreateExpensePage extends StatefulWidget {
-  const CreateExpensePage({super.key});
+  final ExpenseListModel expenses;
+
+  const CreateExpensePage({super.key, required this.expenses});
 
   @override
   State<CreateExpensePage> createState() => _CreateExpensePageState();
@@ -32,7 +35,9 @@ class _CreateExpensePageState extends State<CreateExpensePage> {
 
       final newExpense = Expense(amount, date, category);
 
-      await SQLiteDbProvider.db.createExpense(newExpense);
+      widget.expenses.add(newExpense);
+
+      // await SQLiteDbProvider.db.createExpense(newExpense);
 
       Navigator.pop(context, true);
     }

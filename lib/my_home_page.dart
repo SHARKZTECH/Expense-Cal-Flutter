@@ -1,12 +1,13 @@
 import 'package:expense_calculator/create_expense_page.dart';
 import 'package:expense_calculator/expense.dart';
 import 'package:expense_calculator/expense_page.dart';
+import 'package:expense_calculator/expenselistmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title, required this.expenses});
+  const MyHomePage({super.key, required this.title});
   final String title;
-  final Future<List<Expense>> expenses;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -17,7 +18,12 @@ class _MyHomePageState extends State<MyHomePage> {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const CreateExpensePage(),
+          builder: (context) => ScopedModelDescendant<ExpenseListModel>(
+              builder: (context, child, expenses) {
+            return CreateExpensePage(
+              expenses: expenses,
+            );
+          }),
         ));
   }
 
@@ -30,51 +36,51 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Column(
-        children: <Widget>[
-          const Text(
-            "Total expense: 1000.0",
-            style: TextStyle(fontWeight: FontWeight.w900),
-            textAlign: TextAlign.start,
-          ),
-          Expanded(
-            child: FutureBuilder<List<Expense>>(
-              future: widget.expenses,
-              builder: (context, snapshot) {
-                if (snapshot.hasError) print(snapshot.error);
-                return snapshot.hasData
-                    ? ExpenseList(items: snapshot.data ?? [])
-                    : const Center(
-                        child: CircularProgressIndicator(),
-                      );
+      body: ScopedModelDescendant<ExpenseListModel>(
+        builder: (context, child, expenses) {
+          return ListView.separated(
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return ListTile(
+                    title: Text(
+                      "Total Expense:${expenses.totalExpense}",
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                  );
+                } else {
+                  index = index - 1;
+                  return Dismissible(
+                      key: Key(expenses.items[index].id.toString()),
+                      onDismissed: (direction) {
+                        expenses.delete(expenses.items[index]);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                "Item with id, ${expenses.items[index].id} is dismissed"),
+                          ),
+                        );
+                      },
+                      child: ExpenseBox(
+                        item: expenses.items[index],
+                      ));
+                }
               },
-            ),
-          )
-        ],
+              separatorBuilder: (context, index) {
+                return const Divider();
+              },
+              itemCount:
+                  expenses.items == null ? 1 : expenses.items.length + 1);
+        },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: createExpensePage,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-}
-
-class ExpenseList extends StatelessWidget {
-  const ExpenseList({
-    super.key,
-    required this.items,
-  });
-
-  final List<Expense> items;
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: items.length,
-      itemBuilder: (context, index) {
-        return ExpenseBox(item: items[index]);
-      },
+      floatingActionButton: ScopedModelDescendant<ExpenseListModel>(
+          builder: (context, child, expense) {
+        return FloatingActionButton(
+          onPressed: createExpensePage,
+          tooltip: 'Increment',
+          child: const Icon(Icons.add),
+        );
+      }), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
@@ -104,7 +110,7 @@ class ExpenseBox extends StatelessWidget {
                   Text("spent on ${item.formattedDate}")
                 ],
               ),
-              const Icon(Icons.arrow_forward),
+              const Icon(Icons.keyboard_arrow_right),
             ],
           ),
         ),
